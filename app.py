@@ -2,16 +2,37 @@ import os
 import tempfile
 import time
 from flask import Flask, request, jsonify
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
-import torch
-import torchaudio
-import numpy as np
 import io
 from flask_cors import CORS
 import traceback
 import logging
 import base64
 import requests
+
+# Try to import AI packages
+try:
+    from transformers import WhisperProcessor, WhisperForConditionalGeneration
+    import torch
+    import torchaudio
+    ai_packages_available = True
+    print("✅ AI packages available")
+except ImportError as e:
+    ai_packages_available = False
+    print(f"⚠️ AI packages not available: {e}")
+
+try:
+    import numpy as np
+    numpy_available = True
+except ImportError:
+    numpy_available = False
+    print("⚠️ NumPy not available")
+
+try:
+    import soundfile as sf
+    soundfile_available = True
+except ImportError:
+    soundfile_available = False
+    print("⚠️ soundfile not available")
 
 # Try to import XTTS voice cloning
 try:
@@ -36,6 +57,10 @@ processor = None
 def load_whisper_model():
     """Load only the Whisper model for transcription"""
     try:
+        if not ai_packages_available:
+            logger.warning("AI packages not available - skipping Whisper model loading")
+            return False
+            
         logger.info("Loading Whisper model...")
         global model, processor
         
