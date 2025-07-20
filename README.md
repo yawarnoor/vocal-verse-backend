@@ -23,17 +23,30 @@ git clone <your-repo-url>
 cd vocal-verse-backend
 ```
 
-2. Create a virtual environment:
+2. **Choose your setup:**
+
+### Option A: Basic Setup (Translation + External Voice Cloning)
 
 ```bash
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-3. Install dependencies:
+### Option B: Full AI Setup (All Features Including Local Transcription)
 
 ```bash
-pip install -r requirements.txt
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements-local.txt
+```
+
+### Option C: XTTS Voice Cloning Setup (Requires Python 3.11)
+
+```bash
+python3.11 -m venv venv_xtts
+source venv_xtts/bin/activate
+pip install Flask flask-cors requests numpy TTS transformers torch torchaudio
 ```
 
 4. Install FFmpeg:
@@ -43,18 +56,22 @@ pip install -r requirements.txt
 
 ## Running the Server
 
-### Standard Mode
+### Standard Mode (Basic or Full AI Setup)
 
 ```bash
+# Activate your chosen environment first
+source venv/bin/activate  # For Option A or B
 python app.py
 ```
 
-### With XTTS Support
+### With XTTS Support (Option C)
 
 ```bash
 chmod +x start_xtts_server.sh
 ./start_xtts_server.sh
 ```
+
+**Note**: The script automatically activates the `venv_xtts` environment and starts the server with all AI features including local voice cloning.
 
 The server will run on `http://localhost:3000`
 
